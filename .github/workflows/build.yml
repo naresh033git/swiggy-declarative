@@ -36,4 +36,14 @@ jobs:
           docker push naresh148/swiggy-clone:latest
         env:
           DOCKER_CLI_ACI: 1
+  deploy:
+   needs: build
+   runs-on: [self-hosted]
+   steps:
+      - name: docker pull image
+        run: docker pull naresh148/swiggy-clone:latest
+      - name: Image scan
+        run: trivy image naresh148/swiggy-clone:latest > trivyimagedeploy.txt
+      - name: Deploy to container
+        run: docker run -d --name swiggy-clone -p 3000:3000 naresh148/swiggy-clone:latest
        
